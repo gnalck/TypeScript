@@ -366,7 +366,7 @@ namespace ts {
         return hasProperty(map, key) ? map[key] : undefined;
     }
 
-    export function getOrUpdateProperty<T>(map: MapLike<T>, key: string, makeValue: () => T): T {
+    export function getOrUpdateProperty<T>(map: Map<T>, key: string, makeValue: () => T): T {
         return hasProperty(map, key) ? map[key] : map[key] = makeValue();
     }
 
@@ -464,6 +464,33 @@ namespace ts {
         }
 
         return result;
+    }
+
+    /**
+     * Adds the value to an array of values associated with the key, and returns the array.
+     * Creates the array if it does not already exist.
+     */
+    export function multiMapAdd<V>(map: Map<V[]>, key: string, value: V): V[] {
+        const values = map[key];
+        if (values) {
+            values.push(value);
+            return values;
+        }
+        else {
+            return map[key] = [value];
+        }
+    }
+
+    /** `multiMapAdd` for MapLikes. */
+    export function multiMapAddSafe<V>(map: MapLike<V[]>, key: string, value: V): V[] {
+        const values = lookUp(map, key);
+        if (values) {
+            values.push(value);
+            return values;
+        }
+        else {
+            return map[key] = [value];
+        }
     }
 
     /**

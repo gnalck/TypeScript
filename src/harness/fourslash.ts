@@ -1631,11 +1631,11 @@ namespace FourSlash {
             return this.testData.ranges;
         }
 
-        public rangesByText(): ts.MapLike<Range[]> {
-            const result: ts.MapLike<Range[]> = {};
+        public rangesByText(): ts.Map<Range[]> {
+            const result = ts.createMap<Range[]>();
             for (const range of this.getRanges()) {
                 const text = this.rangeText(range);
-                (ts.getProperty(result, text) || (result[text] = [])).push(range);
+                ts.multiMapAdd(result, text, range);
             }
             return result;
         }
